@@ -4,61 +4,57 @@ const pokemonDatabase = {
         types: ["fire"],
         hp: 39,
         attack: 52,
-        defense: 53,
-        sprite:"",
+        defense: 43,
+        // Real sprite from PokeAPI
+        sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png",
         moves: ["scratch", "ember", "growl", "smokescreen"]
     },
-
-    squirtle:{
-        name: "squirtle",
+    squirtle: {
+        name: "Squirtle",
         types: ["water"],
         hp: 44,
         attack: 48,
         defense: 65,
-        sprite:"",
+        sprite: "https://raw.githubusercontent.com/PokeAPI/spritesmaster/sprites/pokemon/7.png",
         moves: ["tackle", "watergun", "tailwhip", "withdraw"]
     },
-
-    bulbasaur:{
-        name: "bulbasaur",
+    bulbasaur: {
+        name: "Bulbasaur",
         types: ["grass", "poison"],
         hp: 45,
         attack: 49,
         defense: 49,
-        sprite:"",
+        sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
         moves: ["tackle", "vinewhip", "growl", "leechseed"]
     },
-
-    pidgey:{
-        name: "pidgey",
+    pidgey: {
+        name: "Pidgey",
         types: ["normal", "flying"],
         hp: 40,
         attack: 45,
         defense: 40,
-        sprite:"",
+        sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png",
         moves: ["tackle", "gust", "sandattack", "quickattack"]
     },
-
-    rattata:{
-        name: "rattata",
+    rattata: {
+        name: "Rattata",
         types: ["normal"],
         hp: 30,
         attack: 56,
         defense: 35,
-        sprite:"",
+        sprite: "https://raw.githubusercontent.com/PokeAPI/spritesmaster/sprites/pokemon/19.png",
         moves: ["tackle", "tailwhip", "quickattack", "hyperfang"]
     },
-
-    ekans:{
-        name: "ekans",
+    ekans: {
+        name: "Ekans",
         types: ["poison"],
         hp: 35,
         attack: 60,
         defense: 44,
-        sprite:"",
+        sprite: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/23.png",
         moves: ["wrap", "poisonsting", "bite", "glare"]
-    },
-}
+    }
+};
 
 const movesDatabase = {
      scratch: {

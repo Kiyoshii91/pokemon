@@ -13,7 +13,9 @@
             <!-- Enemy Pokemon -->
             <div class="enemy-section">
                 <div class="pokemon-display enemy-pokemon">
-                    <div class="pokemon-sprite" id="enemySprite"></div>
+                    <div class="pokemon-sprite" id="enemySprite">
+                        <img src="" alt="Enemy Pokemon" id="enemyImage">
+                    </div>
                     <div class="pokemon-info">
                         <h3 id="enemyName">Pidgey</h3>
                         <div class="hp-bar-container">
@@ -41,7 +43,9 @@
                             <span class="type-badge fire">Fire</span>
                         </div>
                     </div>
-                    <div class="pokemon-sprite" id="playerSprite"></div>
+                    <div class="pokemon-sprite" id="playerSprite">
+                        <img src="" alt="Player Pokemon" id="playerImage">
+                    </div>
                 </div>
             </div>
         </div>
@@ -84,8 +88,8 @@
         <div class="battle-effects" id="battleEffects"></div>
     </div>
 
-    <script src="pokemonData.js"></script>
-    <script src="battleSystem.js"></script>
-    <script src="game.js"></script>
+    <script src="scripts/pokemonData.js"></script>  <!-- ✅ Load FIRST -->
+    <script src="scripts/battlesystem.js"></script>
+    <script src="scripts/game.js"></script>
 </body>
 </html>

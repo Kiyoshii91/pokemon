@@ -1,0 +1,214 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url("../images/neonbg.jpg");
+    background-size: cover;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.main-menu-container {
+    width: 100%;
+    height: 100vh;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-background {
+    /* position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 120%),
+        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 100%),
+        linear-gradient(135deg, #667eea 0%, #000 100%);
+    animation: backgroundShift 2s ease-in-out infinite; */
+}
+
+@keyframes backgroundShift {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.8; }
+}
+
+.menu-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 50px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    max-width: 500px;
+    width: 90%;
+    
+}
+
+.game-title {
+    font-size: 3em;
+    color: #fff;
+    margin-bottom: 15px;
+    text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+    animation: titlePulse 2s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.game-subtitle {
+    font-size: 1.2em;
+    color: #ecf0f1;
+    margin-bottom: 40px;
+    opacity: 0.9;
+}
+
+.main-menu-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.menu-btn {
+  padding: 18px 40px;
+  border: none;
+  border-radius: 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 250px;
+  position: relative;
+  overflow: hidden;
+  background: #111; /* dark base */
+  color: #fff;
+  border: 2px solid;
+  box-shadow: 0 0 10px currentColor, inset 0 0 5px currentColor;
+}
+
+.menu-btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  transition: left 0.6s;
+}
+.menu-btn:hover::before {
+    left: 100%;
+}
+
+.menu-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px currentColor, inset 0 0 10px currentColor;
+}
+
+.menu-btn:active {
+    transform: translateY(-1px);
+}
+
+.battle-btn { 
+    border-color: #ff00ff; 
+    color: #ff00ff; 
+} /* magenta */
+.market-btn { 
+    border-color: #00ffff; 
+    color: #00ffff; 
+} /* cyan */
+.settings-btn { 
+    border-color: #39ff14; 
+    color: #39ff14; 
+} /* lime */
+.exit-btn { 
+    border-color: #faff00; 
+    color: #faff00; }
+
+.sub-menu {
+    margin-top: 20px;
+    padding: 20px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+}
+
+.sub-menu-content {
+    margin-bottom: 15px;
+    color: white;
+}
+
+.back-btn {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    min-width: 150px;
+    padding: 12px 25px;
+    font-size: 1em;
+}
+
+.back-btn:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+/* Sub-menu animations */
+.sub-menu {
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.2em;
+    }
+    
+    .menu-content {
+        padding: 30px 20px;
+    }
+    
+    .menu-btn {
+        min-width: 200px;
+        padding: 15px 30px;
+        font-size: 1.1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-title {
+        font-size: 1.8em;
+    }
+    
+    .game-subtitle {
+        font-size: 1em;
+    }
+    
+    .menu-btn {
+        min-width: 180px;
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+}
