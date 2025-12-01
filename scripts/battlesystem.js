@@ -2,7 +2,7 @@
 const fighters = [
   {
     id: 4, name: 'Charmander', types: ['fire'],
-    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png    ',
+    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png      ',
     maxMana: 100, mana: 100,
     moves: [
       { name: 'Scratch',       mana: 0,  power: 40,  baseLow: 1,  baseHigh: 3,  cd: 0,  desc: 'Basic attack' },
@@ -13,7 +13,7 @@ const fighters = [
   },
   {
     id: 7, name: 'Squirtle', types: ['water'],
-    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png    ',
+    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png      ',
     maxMana: 100, mana: 100,
     moves: [
       { name: 'Tackle',        mana: 0,  power: 40,  baseLow: 1,  baseHigh: 3,  cd: 0,  desc: 'Basic attack' },
@@ -24,7 +24,7 @@ const fighters = [
   },
   {
     id: 1, name: 'Bulbasaur', types: ['grass','poison'],
-    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png    ',
+    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png      ',
     maxMana: 100, mana: 100,
     moves: [
       { name: 'Vine Whip',      mana: 0,  power: 40,  baseLow: 1, baseHigh: 3,  cd: 0,  desc: 'Basic grass whip' },
@@ -35,7 +35,7 @@ const fighters = [
   },
     {
       id: 19, name: 'Rattata',   types: ['normal'],            
-      sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png    ',
+      sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png      ',
       maxMana: 100, mana: 100,
       moves: [
       { name: 'Tackle',        mana: 0,  power: 40,  baseLow: 1,  baseHigh: 3,  cd: 0,  desc: 'Basic attack' },
@@ -47,9 +47,9 @@ const fighters = [
 ];
 
 const enemies = [
-  { id: 19, name: 'Rattata',   types: ['normal'],            sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png    ' },
-  { id: 16, name: 'Pidgey',    types: ['normal', 'flying'],  sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png    ' },
-  { id: 10, name: 'Caterpie',  types: ['bug'],               sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10.png    ' }
+  { id: 19, name: 'Rattata',   types: ['normal'],            sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png      ' },
+  { id: 16, name: 'Pidgey',    types: ['normal', 'flying'],  sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png      ' },
+  { id: 10, name: 'Caterpie',  types: ['bug'],               sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10.png      ' }
 ];
 
 /* ----------  read chosen fighter  ---------- */
@@ -78,25 +78,24 @@ const eHpBar  = document.getElementById('eHp');
 
 const movePanel = document.getElementById('movePanel');
 
-/* ----------  COOLDOWN MANAGER  (removes/restores handler)  ---------- */
-const cooldowns = {};   // btn -> seconds left
+/* ----------  COOLDOWN MANAGER  (detach / re-attach handler)  ---------- */
+const handlers = new Map();   // btn -> original handler
 function startCooldown(btn, secs) {
-  if (secs <= 0) return;
+  const original = handlers.get(btn) ?? btn.onclick; // save once
+  handlers.set(btn, original);
+  btn.onclick = null;                    // ★ kill click
   btn.disabled = true;
-  btn.onclick  = null;                          // ★ kill handler immediately
 
   let left = secs;
   const end = Date.now() + left * 1000;
   const tick = setInterval(() => {
     left = Math.ceil((end - Date.now()) / 1000);
+    btn.textContent = left + 's';
     if (left <= 0) {
       clearInterval(tick);
-      btn.disabled = false;
       btn.textContent = btn.dataset.move;
-      delete cooldowns[btn];
-      btn.onclick = btn._originalHandler;      // ★ restore handler
-    } else {
-      btn.textContent = left + 's';
+      btn.disabled = false;
+      btn.onclick = original;              // ★ restore click
     }
   }, 200);
 }
@@ -197,30 +196,23 @@ function renderMoveButtons() {
     btn.title = `${mv.desc} (${mv.mana} MP)`;
 
     btn.onclick = function () {
-      if (btn.disabled) return;                   // still counting
-      const move = playerMon.moves.find(m => m.name === btn.dataset.move);
-      if (!move) return;
-
-      if (playerMon.mana < move.mana) { addLog('Not enough MP!', false); return; }
-
-      playerMon.mana -= move.mana;
+      if (playerMon.mana < mv.mana) { addLog('Not enough MP!', false); return; }
+      playerMon.mana -= mv.mana;
       renderMana();
-
       let finalPower = 1;
-      if (move.name === 'Ember'     && enemyMon.types.includes('grass')) finalPower = 1.5;
-      if (move.name === 'Water Gun' && enemyMon.types.includes('fire'))  finalPower = 1.5;
-      if (move.name === 'Vine Whip' && enemyMon.types.includes('water')) finalPower = 1.5;
-
-      attack(move, true);
+      if (mv.name === 'Ember'     && enemyMon.types.includes('grass')) finalPower = 1.5;
+      if (mv.name === 'Water Gun' && enemyMon.types.includes('fire'))  finalPower = 1.5;
+      if (mv.name === 'Vine Whip' && enemyMon.types.includes('water')) finalPower = 1.5;
+      attack(mv, true);
       freezeMoves();
       setTimeout(enemyTurn, 1500);
-
-      startCooldown(btn, move.cd);   // start timer
+      startCooldown(btn, mv.cd);   // start lock
     };
 
     panel.appendChild(btn);
   });
 }
+
 /* ----------  ENEMY TURN  ---------- */
 function enemyTurn() {
   const move = playerMon.moves[Math.floor(Math.random() * 4)];
@@ -231,7 +223,7 @@ function enemyTurn() {
     attack(move, false);
   }
   renderEnemyMana();
-  thawMoves();         
+  thawMoves();
 }
 
 /* ----------  FREEZE / THAW  ---------- */
@@ -254,11 +246,8 @@ setInterval(() => {
   }
 }, 1000);
 
-/* ----------  RUN BUTTON  ---------- */
 document.getElementById('runBtn').onclick = () => confirm('Quit battle?');
-
-/* ----------  START  ---------- */
 window.addEventListener('DOMContentLoaded', () => {
   renderMoveButtons();
   init();
-}); 
+});
