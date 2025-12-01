@@ -1,95 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokémon Battle Arena</title>
-    <link rel="stylesheet" href="css/gameplaystyle.css">
+  <meta charset="UTF-8"/>
+  <title>Arena of Legends – Battle</title>
+  <link rel = "stylesheet" href = "css/gameplaystyle.css">
 </head>
 <body>
-    <div class="game-container">
-        <!-- Battle Arena -->
-        <div class="battle-arena">
-            <!-- Enemy Pokemon -->
-            <div class="enemy-section">
-                <div class="pokemon-display enemy-pokemon">
-                    <div class="pokemon-sprite" id="enemySprite">
-                        <img src="" alt="Enemy Pokemon" id="enemyImage">
-                    </div>
-                    <div class="pokemon-info">
-                        <h3 id="enemyName">Pidgey</h3>
-                        <div class="hp-bar-container">
-                            <div class="hp-bar" id="enemyHpBar"></div>
-                            <span class="hp-text" id="enemyHp">HP: 35/35</span>
-                        </div>
-                        <div class="type-display" id="enemyTypes">
-                            <span class="type-badge flying">Flying</span>
-                            <span class="type-badge normal">Normal</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="battle-wrap">
+    <h1 class="neon-title">Arena Battle</h1>
 
-            <!-- Player Pokemon -->
-            <div class="player-section">
-                <div class="pokemon-display player-pokemon">
-                    <div class="pokemon-info">
-                        <h3 id="playerName">Charmander</h3>
-                        <div class="hp-bar-container">
-                            <div class="hp-bar" id="playerHpBar"></div>
-                            <span class="hp-text" id="playerHp">HP: 39/39</span>
-                        </div>
-                        <div class="type-display" id="playerTypes">
-                            <span class="type-badge fire">Fire</span>
-                        </div>
-                    </div>
-                    <div class="pokemon-sprite" id="playerSprite">
-                        <img src="" alt="Player Pokemon" id="playerImage">
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="arena">
+      <!-- PLAYER SIDE -->
+      <div class="poke-side player-side">
+        <div id="pName">PLAYER</div>
+        <img id="pSprite" src="" alt="">
+        <div class="mp-bar"><div id="pMp" class="mp-fill"></div></div>
+        <div class="hp-bar"><div id="pHp" class="hp-fill"></div></div>
+        <div id="pTypes"></div>
+      </div>
 
-        <!-- Battle UI -->
-        <div class="battle-ui">
-            <!-- Battle Text -->
-            <div class="battle-text" id="battleText">
-                What will Charmander do?
-            </div>
-
-            <!-- Action Menu -->
-            <div class="action-menu" id="actionMenu">
-                <button class="action-btn" onclick="showMoves()">FIGHT</button>
-                <button class="action-btn" onclick="showPokemon()">POKéMON</button>
-                <button class="action-btn" onclick="useItem()">ITEM</button>
-                <button class="action-btn" onclick="run()">RUN</button>
-            </div>
-
-            <!-- Moves Menu -->
-            <div class="moves-menu" id="movesMenu" style="display: none;">
-                <div class="moves-grid" id="movesGrid"></div>
-                <button class="back-btn" onclick="showMainMenu()">BACK</button>
-            </div>
-
-            <!-- Pokemon Selection -->
-            <div class="pokemon-menu" id="pokemonMenu" style="display: none;">
-                <div class="team-grid" id="teamGrid"></div>
-                <button class="back-btn" onclick="showMainMenu()">BACK</button>
-            </div>
-
-            <!-- Item Menu -->
-            <div class="item-menu" id="itemMenu" style="display: none;">
-                <div class="items-grid" id="itemsGrid"></div>
-                <button class="back-btn" onclick="showMainMenu()">BACK</button>
-            </div>
-        </div>
-
-        <!-- Battle Effects -->
-        <div class="battle-effects" id="battleEffects"></div>
+      <!-- ENEMY SIDE -->
+      <div class="poke-side enemy-side">
+        <div id="eName">ENEMY</div>
+        <img id="eSprite" src="" alt="">
+        <div class="mp-bar"><div id="eMp" class="mp-fill"></div></div>
+        <div class="hp-bar"><div id="eHp" class="hp-fill"></div></div>
+        <div id="eTypes"></div>
+      </div>
     </div>
 
-    <script src="scripts/pokemonData.js"></script>  <!-- ✅ Load FIRST -->
-    <script src="scripts/battlesystem.js"></script>
-    <script src="scripts/game.js"></script>
+    <div id="battleLog" class="log"></div>
+
+    <!-- MOVE CHOICE -->
+    <div class="moves" id="movePanel">
+      <button class="move-btn" data-move="1stSkill"></button>
+      <button class="move-btn" data-move="2ndSkill"></button>
+      <button class="move-btn" data-move="3rdSkill"></button>
+      <button class="move-btn" data-move="Ultimate"></button>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="controls">
+      <a id="runBtn" class="neon-btn" href="menu.html">Auto Attack</a>
+    </div>
+  </div>
+  <script src = "scripts/battlesystem.js"></script>
+  <!-- <script src = "scripts/pokemonwarriors.js"></script> -->
 </body>
 </html>
