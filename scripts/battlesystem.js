@@ -234,7 +234,7 @@ function attack(move, isPlayer) {
     target.currentArmor = Math.max(0, armor - shred);
     addLog(`${target.name}'s armor was shredded for ${shred} (true)!`, !isPlayer);
     renderArmor();
-    
+
   } else {
     // normal depleting armor
     if (armor > 0) {
@@ -280,7 +280,7 @@ function showEndBanner(message) {
   txt.style.fontSize = '4rem'; txt.style.marginBottom = '1.5rem';
   const btn = document.createElement('button');
   btn.textContent = 'Main Menu'; btn.className = 'neon-btn';
-  btn.onclick = () => location.href = 'menu.html';
+  btn.onclick = () => location.href = 'index.html';
   banner.append(txt, btn); document.body.appendChild(banner);
 }
 
