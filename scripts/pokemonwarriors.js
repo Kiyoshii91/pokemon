@@ -127,7 +127,7 @@ function startCooldown(btn, secs){
     }
   }, 200);
 }
-
+//asdasdasd
 function doMove(move){
   console.log(`${pokemon.name} used ${move.name} (${move.power} power)`);
   // plug your own particles / enemy HP reduction here
