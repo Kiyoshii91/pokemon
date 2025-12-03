@@ -1,0 +1,119 @@
+ *{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+ body{
+  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  color:#fff;
+  background:#0b0b0d url("../images/marketplace.jpg") center/cover;
+  min-height:100vh;
+}
+
+    /* ---- FIXED NEON NAVBAR ---- */
+.shop-tabs{
+  top:0;left:0;right:0;
+  display:flex;gap:12px;justify-content:center;
+  padding:10px 20px;
+  background:rgba(0,0,0,.85);
+  border-bottom:2px solid #0ff;
+  box-shadow:0 0 12px #0ff,inset 0 0 8px rgba(0,255,255,.3);
+  z-index:1000;
+  position:fixed;
+}
+
+.tab{
+  color:#0ff;font-weight:bold;text-transform:uppercase;cursor:pointer;
+  border-radius:6px;text-shadow:0 0 4px #0ff;transition:.2s;
+  padding:10px 20px;background:transparent;border:1px solid #0ff;
+}
+
+.tab:hover{
+  background:#0ff;
+  color:#000;
+  box-shadow:0 0 12px #0ff
+}
+    
+.tab.active{
+  background:#0ff;
+  color:#000;
+  box-shadow:0 0 15px #0ff,inset 0 0 5px #fff
+}
+.market-wrap{
+  margin:80px auto 0; /* top gap + center horizontally */
+  padding:25px;
+  text-align:center;
+  width:90%;max-width:900px;
+  background:rgba(0,0,0,.8);
+  border:2px solid #0ff;
+  border-radius:15px;
+  box-shadow:0 0 15px #0ff,inset 0 0 10px rgba(0,255,255,.2);
+}
+
+.shop-grid{
+  grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+  gap:12px;
+  display:grid;
+  margin-top:20px; /* space between navbar & cards */
+}
+
+    /* ---- PRODUCT CARD ---- */
+.card{
+  border:1px solid #0ff;
+  border-radius:8px;
+  padding:10px;
+  background:rgba(0,0,0,.6);
+  text-align:center
+}
+    
+.card img{
+  height:80px;
+  width:80px;
+  image-rendering:pixelated
+}
+    
+.price{color:gold;
+  font-weight:bold;
+  margin-top:6px
+}
+.buy-btn{margin-top:6px;
+  border:1px solid gold;
+  background:transparent;
+  color:gold;cursor:pointer;
+  padding:4px 10px;
+}
+.buy-btn:disabled{
+  cursor:not-allowed;
+  opacity:.4;
+}
+
+    /* ---- NEON BACK BUTTON ---- */
+#backBtn{
+  margin-top:15px;
+  display:inline-block;
+  
+}
+.neon-btn{
+  padding:12px 28px;
+  border:2px solid #f0f;
+  border-radius:8px;
+  background:transparent;
+  color:#f0ff;
+  font-weight:bold;
+  text-transform:uppercase;
+  cursor:pointer;
+  text-shadow:0 0 4px #f0f;
+  box-shadow:0 0 8px #f0f,inset 0 0 8px #f0f;
+  transition:.2s;
+
+}
+.neon-btn:hover{
+  background:#f0f;
+  color:#000;
+  box-shadow:0 0 20px #f0f,inset 0 0 10px #fff;
+}
+
+.neon-btn:active{
+  transform:scale(.95);
+}

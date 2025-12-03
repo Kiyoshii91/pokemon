@@ -23,8 +23,8 @@ body{
     margin:20px 0;
 }
 .poke-side img{
-    width:120px;
-    height:120px;
+    width:225px;
+    height:225px;
     image-rendering:pixelated
     }
 
@@ -99,6 +99,20 @@ body{
     font-weight:bold;
     z-index:9999;
     animation:fade 1.5s forwards
+}
+/*armor*/
+.bar-wrap { 
+    height: 6px; 
+    background: gray; 
+    margin: 2px 0; 
+    border-radius: 3px; 
+    overflow: hidden; }
+
+.armor-bar { 
+    height: 100%; 
+    background: gold; 
+    transition: width .2s; 
+    display: none; 
 }
   
 /* Battle log */

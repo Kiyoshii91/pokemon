@@ -2,8 +2,9 @@
 const fighters = [
   {
     id: 4, name: 'Charmander', types: ['fire'],
-    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png',
+    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png ',
     maxMana: 100, mana: 100,
+    armor: 0,
     moves: [
       { name: 'Scratch',       mana:  0, power: 40, cd: 0, desc: 'Basic attack' },
       { name: 'Ember',         mana: 20, power: 60, cd: 2, desc: 'Low-cost fire spit' },
@@ -13,8 +14,9 @@ const fighters = [
   },
   {
     id: 7, name: 'Squirtle', types: ['water'],
-    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png',
+    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png ',
     maxMana: 100, mana: 100,
+    armor: 100,
     moves: [
       { name: 'Tackle',        mana:  0, power: 40, cd: 0, desc: 'Basic attack' },
       { name: 'Water Gun',     mana: 20, power: 60, cd: 2, desc: 'Ranged water shot' },
@@ -24,7 +26,7 @@ const fighters = [
   },
   {
     id: 1, name: 'Bulbasaur', types: ['grass','poison'],
-    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png',
+    sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png ',
     maxMana: 100, mana: 100,
     moves: [
       { name: 'Vine Whip',      mana:  0, power: 40, cd: 0, desc: 'Basic grass whip' },
@@ -35,7 +37,7 @@ const fighters = [
   },
     {
       id: 19, name: 'Rattata',   types: ['normal'],            
-      sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png ',
+      sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/19.png  ',
       maxMana: 100, mana: 100,
       moves: [
       { name: 'Tackle',        mana: 0,  power: 40,  baseLow: 1,  baseHigh: 3,  cd: 0,  desc: 'Basic attack' },
@@ -121,16 +123,14 @@ startLink.addEventListener('click', e => {
   }
   const url = `gameplay.html?fighter=${selectedFighter}`;
   startLink.href = url; 
-  // ----- NEW -----
   alert(`You chose ${fighters.find(f=>f.id===selectedFighter).name}!`);
-  // let the normal href navigation happen after OK
 });
-/* ----------  INIT  ---------- */
 
-const LOCK_TIME = 30;                 // seconds
+/* ----------  30-s AUTO-REDIRECT  ---------- */
+const LOCK_TIME = 30;
 let timeLeft   = LOCK_TIME;
-let locked     = false;               // true once we’ve committed
-const timerBar  = document.createElement('div');
+let locked     = false;
+const timerBar = document.createElement('div');
 timerBar.style.cssText = `
   position:fixed; top:0; left:0; height:6px; width:100%;
   background:#00c3ff; transform-origin:left;
@@ -138,39 +138,31 @@ timerBar.style.cssText = `
   z-index:9999;
 `;
 document.body.appendChild(timerBar);
+requestAnimationFrame(() => timerBar.style.transform = 'scaleX(0)');
 
-const interval = setInterval(()=>{
-  timeLeft--;
-  if (timeLeft <= 0 && !locked) autoLock();
+const interval = setInterval(() => {
+  if (--timeLeft <= 0 && !locked) autoLock();
 }, 1000);
-
-// visual shrinking bar
-requestAnimationFrame(()=>timerBar.style.transform = 'scaleX(0)');
 
 function autoLock(){
   locked = true;
   clearInterval(interval);
-  if (!selectedFighter) selectFighter(fighters[0].id); 
-  goToBattle();
-}
-
-function goToBattle(){
-  const name = fighters.find(f=>f.id===selectedFighter).name;
-  alert(`Locked in: ${name}!`);          // feel free to swap for nicer UI
-  location.href = `gameplay.html?fighter=${selectedFighter}`;
+  location.href = selectedFighter
+    ? `gameplay.html?fighter=${selectedFighter}`   // picked → play
+    : 'menu.html';                                // nothing → menu
 }
 
 /* ----------  START BUTTON  ---------- */
 startLink.addEventListener('click', e => {
+  if (locked) return;
   if (!selectedFighter){
     e.preventDefault();
     quickToast('Pick a Pokémon first!');
     return;
   }
-  if (locked) return;   // already committed
   locked = true;
   clearInterval(interval);
-  goToBattle();
+  location.href = `gameplay.html?fighter=${selectedFighter}`;
 });
 
 /* ----------  INIT  ---------- */

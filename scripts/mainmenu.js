@@ -31,3 +31,7 @@ window.addEventListener('load', () => {
     }, i * 150);
   });
 });
+  const bg = document.getElementById('menuMusic');
+  document.body.addEventListener('click', () => {
+    bg.muted = false;
+  }, { once: true });

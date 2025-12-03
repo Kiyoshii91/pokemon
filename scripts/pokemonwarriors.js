@@ -1,11 +1,8 @@
-/* ==========================================
-   BATTLE.JS  –  4-skill moveset + Mana
-   ========================================== */
 (function(){
 
 /* ----------  CONFIG  ---------- */
-const LOCK_TIME      = 30;        // choose timer (sec) – re-use if you want
-const MANA_REGEN_PER_SEC = 3;     // MP restored each second
+const LOCK_TIME      = 30;   
+const MANA_REGEN_PER_SEC = 3;     
 const MANA_COLOR     = '#00c3ff';
 const ULT_COLOR      = 'crimson';
 

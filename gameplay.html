@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Arena of Legends – Battle</title>
-  <link rel = "stylesheet" href = "css/gameplaystyle.css">
+  <link rel="stylesheet" href="css/gameplaystyle.css">
 </head>
 <body>
   <div class="battle-wrap">
@@ -14,8 +14,10 @@
       <div class="poke-side player-side">
         <div id="pName">PLAYER</div>
         <img id="pSprite" src="" alt="">
+        <div class="bar-wrap"><div id="pArmor" class="armor-bar"></div></div>
         <div class="mp-bar"><div id="pMp" class="mp-fill"></div></div>
         <div class="hp-bar"><div id="pHp" class="hp-fill"></div></div>
+        <!-- ARMOR -->
         <div id="pTypes"></div>
       </div>
 
@@ -23,8 +25,10 @@
       <div class="poke-side enemy-side">
         <div id="eName">ENEMY</div>
         <img id="eSprite" src="" alt="">
+        <div class="bar-wrap"><div id="eArmor" class="armor-bar"></div></div>
         <div class="mp-bar"><div id="eMp" class="mp-fill"></div></div>
         <div class="hp-bar"><div id="eHp" class="hp-fill"></div></div>
+        <!-- ARMOR -->
         <div id="eTypes"></div>
       </div>
     </div>
@@ -44,7 +48,6 @@
       <a id="runBtn" class="neon-btn" href="menu.html">Auto Attack</a>
     </div>
   </div>
-  <script src = "scripts/battlesystem.js"></script>
-  <!-- <script src = "scripts/pokemonwarriors.js"></script> -->
+  <script src="scripts/battlesystem.js"></script>
 </body>
 </html>
