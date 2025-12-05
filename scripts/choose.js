@@ -149,7 +149,7 @@ function autoLock(){
   clearInterval(interval);
   location.href = selectedFighter
     ? `gameplay.html?fighter=${selectedFighter}`   // picked → play
-    : 'index.html';                                // nothing → menu
+    : 'menu.html';                                // nothing → menu
 }
 
 /* ----------  START BUTTON  ---------- */
