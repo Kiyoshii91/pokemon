@@ -1,34 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Market Place</title>
-  <link rel="stylesheet" href="css/marketplaceDesign.css" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="./style.css" />
+    <title>Connect MetaMask</title>
 </head>
+
 <body>
-<section class="market-wrap">
-  <div class="currency-bar">
-  <!-- <button id="connectBtn" class="neon-btn">Connect Wallet</button> -->
-      <span>MTK: <span id="gold">-</span></span>
-      <span>ETH: <span id="gems">-</span></span>
-  </div>
-</div>
+    <div class="parent">
+        <div class="div1">
+            <h1 class="center">Connect MetaMask to a webpage</h1>
+            <h2 class="center">This page shows you how to connect MetaMask to a webpage to create a DApp!</h2>
+            <h3 class="center">Check the source code in the <a href="https://github.com/soos3d/connect-metamask-to-webpage" target="_blank">GitHub repo</a>.</h3>
+            <p class="center">Click the button to prompt MetaMask to connect</p>
+        </div>
 
-    <nav class="shop-tabs">
-    <button class="tab active" data-tab="Fire">Fire Pokemons</button>
-    <button class="tab" data-tab="Water">Water Pokemons</button>
-    <button class="tab" data-tab="Normal">Normal Pokemons</button>
-    <button class="tab" data-tab="Poison">Poison Pokemons</button>
-    <button class="tab" data-tab="Dragon">Dragon Pokemons</button>
-    </nav>
+        <div class="div2">
+            <h3>Click the button to connect MetaMask to the website</h3>
+            <button onclick="switchNetwork()">Switch to Polygon</button>
+            <button onclick="connect()">Connect Wallet</button>
+        </div>
+    </div>
 
-  <div id="shopContent" class="shop-grid"></div>
-  <a href = "index.html" id="backBtn" class="neon-btn" style="text-decoration: none;">Back to Menu</a>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
-<script src="scripts/marketPlaceScript.js"></script>
-<script>
-          function connect() {
+    <script>
+        // Identify the accounts and connect MetaMask to the website.
+        function connect() {
             ethereum
                 .request({
                     method: 'eth_requestAccounts'
@@ -80,6 +79,7 @@
                 // handle other "switch" errors
             }
         }
-</script>
+    </script>
+
 </body>
-</html>
+</html> 

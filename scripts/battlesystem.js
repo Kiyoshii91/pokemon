@@ -5,7 +5,7 @@ const fighters = [
     maxMana: 750, mana: 750, armor: 3000,
     moves: [
       { name: 'Spit-Fire', mana: 0, power: 40, baseLow: 1, baseHigh: 3, cd: 2, desc: 'Basic attack' },
-      { name: 'Flame On~', mana: 0, power: 2, baseLow: 4, baseHigh: 6, cd: 5, manaGain: '50%', desc: '' },
+      { name: 'Flame On~', mana: 0, power: 2, baseLow: 4, baseHigh: 6, cd: 5, heal:100, desc: '' },
       { name: 'Flame Burst', mana: 35, power: 80, baseLow: 7, baseHigh: 9, cd: 8, trueDmg: true, desc: 'Small AoE burst' },
       { name: 'Inferno Overdrive', mana: 60, power: 150, baseLow: 10, baseHigh: 12, stun:1, trueDmg:true, cd: 25, lifesteal: '30%', desc: 'ULT: huge fire blast' }
     ]
@@ -280,7 +280,7 @@ function showEndBanner(message) {
   txt.style.fontSize = '4rem'; txt.style.marginBottom = '1.5rem';
   const btn = document.createElement('button');
   btn.textContent = 'Main Menu'; btn.className = 'neon-btn';
-  btn.onclick = () => location.href = 'menu.html';
+  btn.onclick = () => location.href = 'index.html';
   banner.append(txt, btn); document.body.appendChild(banner);
 }
 

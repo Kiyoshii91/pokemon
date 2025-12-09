@@ -1,0 +1,57 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+body {
+    font-family: 'Arial', sans-serif;
+    background-image: url("../images/championswallpaper.gif");
+    background-size: cover;
+    color:#0ff;
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+    text-align:center;
+    padding:2rem
+}
+h1{
+    margin-bottom:1.5rem
+}
+.grid{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:1rem
+}
+.card{
+    width:140px;
+    border:1px solid #0ff;
+    border-radius:8px;
+    padding:.5rem;
+    background:#000
+}
+.card img{
+    width:100px;
+    height:100px;
+    object-fit:contain
+}
+.name{
+    margin-top:.5rem;
+    font-size:.9rem
+}
+#none{
+    color:#0ff;
+    margin-top:2rem
+}
+#backBtn{
+    margin-top:2rem;
+    padding:6px 14px;
+    border:1px solid #0ff;
+    background:transparent;
+    color:#0ff;
+    border-radius:4px;
+    text-decoration:none;
+    display:inline-block
+}
+#backBtn:hover{
+    background:#0ff;
+    color:#000
+}
