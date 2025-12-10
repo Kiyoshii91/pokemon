@@ -1,278 +1,267 @@
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
+/* ==========================================
+   BLACK-CARD THEME  –  link AFTER choose.css
+   ========================================== */
+
+/* 1.  black card base */
 body{
-  min-height:100vh;
-  background:#0b0b0d url("../images/neonbg.jpg");
+  background-image: url('../images/choosewallpaper.gif');
   background-size: cover;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color:#fff;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  overflow:hidden;
+  background-repeat: no-repeat;
 }
-
-.neon-title, .neon-sub,.neon-h,.neon-btn,.map-grid{
-  text-transform: uppercase;
-  font-weight: 900;
-  letter-spacing: 0px;
+.neon-h {
   text-align: center;
-}
-
-.neon-title{
-  font-size: 3.5rem;
   color: #fff;
-  text-shadow: 
-  0 0 5px #fff
-  0 0 10px #fff
-  0 0 20px #f0f
-  0 0 20px #f0f;
-  margin-bottom: 10px;
-}
-
-.flixcker{
-  animation:flick 1.5s infinite alternate;
-}
-
-@keyframes flick{
-  0%,18%,22%,25%,53%,57%,100%{text-shadow:0 0 4px #fff,0 0 11px #fff,0 0 19px #f0f,0 0 40px #f0f;}
-  20%,24%,55%{text-shadow:none;}
-}
-
-.neon-sub{
-  font-size: 1.1rem;
-  color: #0ff;
-  text-shadow: 0 0 5px #0ff;
-  /* text-align: center; */
-}
-
-.neon-h{
-    margin:15px 0 15px;
-    font-size:1.6rem;
-    color:#0ff;
-    text-shadow:0 0 8px #0ff;
-    text-align: center;
-}
-
-.grid{
-  display:flex !important;
-  flex-direction:row !important;
-  justify-content:center;
-  gap:20px;
-  flex-wrap:nowrap !important;
-}
-
-.poke-card, .map-card{
-  display:inline-block;          
-  vertical-align:top;            
-  width:150px;
-  padding:12px;
-  background:rgba(0,0,0,.6);
-  border:2px solid #0ff;
-  border-radius:15px;
-  cursor:pointer;
-  transition:transform .2s,box-shadow .2s;
-  margin:0 10px;    
-  text-align: center;            
-}
-.poke-card:hover,.map-card:hover{
-  transform:scale(1.08);
-  box-shadow:0 0 15px #f0f;
-}
-
-.poke-card.selected,.map-card.selected{
-  border-color:#f0f;
-  box-shadow:0 0 20px #f0f;
-}
-
-.poke-card img{
-    width:90px;
-    height:90px;
-    image-rendering:pixelated;
-}
-.poke-card{
-  width:160px;                
-  height:160px;               
-  justify-content:space-between;
-  text-align:center;
-}
-.map-card img{
-    width:100%;
-    height:80px;
-    object-fit:cover;
-    border-radius:8px;
-}
-
-.map-card{
-  width:160px;                
-  height:130px;               
-  justify-content:space-between;
-  text-align:center;
-}
-
-.neon-btn{
-  padding:15px 35px;
-  font-size:1.1rem;
-  border:none;
-  border-radius:25px;
-  cursor:pointer;
-  background:#111;
-  color:#fff;
-  border:2px solid;
-  transition:all .2s;
-  text-align: center;
-}
-.neon-btn.start{
-    border-color:#0ff;
-    box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;
-}
-.neon-btn.start:hover{
-    box-shadow:0 0 20px #0ff,inset 0 0 10px #0ff;
-    transform:translateY(-2px);}
-.neon-btn.back{
-    border-color:#f0f;box-shadow:0 0 10px #f0f,inset 0 0 5px #f0f;
-}
-.neon-btn.back:hover{
-    box-shadow:0 0 20px #f0f,inset 0 0 10px #f0f;transform:translateY(-2px);
-}
-.neon-btn:disabled{
-    opacity:.4;
-    cursor:not-allowed;
-}
-.choose-footer{
-    display:grid;          /* 2 equal columns */
-    grid-template-columns:1fr 1fr;
-    gap:20px;              /* space between the two buttons */
-    margin-top:30px;
-    width:100%;
-    max-width:4000px;  
-}
-/*
- .neon-title,.neon-sub,.neon-h,.neon-btn{
-  text-transform:uppercase;
-  font-weight:900;
-  letter-spacing:2px;
-}
-.neon-title{
-  font-size:3.5rem;
-  color:#fff;
   text-shadow:
-    0 0 5px #fff,
+    0 0 4px #fff,
     0 0 10px #fff,
-    0 0 20px #f0f,
-    0 0 20px #f0f;
-  margin-bottom:10px;
-}
-.flicker{
-    animation:flick 1.5s infinite alternate;
-}
-@keyframes flick{
-  0%,18%,22%,25%,53%,57%,100%{text-shadow:0 0 4px #fff,0 0 11px #fff,0 0 19px #f0f,0 0 40px #f0f;}
-  20%,24%,55%{text-shadow:none;}
-}
-.neon-sub{
-    font-size:1.1rem;
-    color:#0ff;
-    text-shadow:0 0 5px #0ff;
-}
-.choose-container{
-  width:90%;max-width:1000px;
-  background:rgba(0,0,0,.75);
-  border:2px solid #0ff;
-  box-shadow:0 0 20px #0ff,inset 0 0 20px #0ff;
-  border-radius:20px;
-  padding:30px 20px;
-  text-align:center;
-}
-.neon-h{
-    margin:25px 0 15px;
-    font-size:1.6rem;
-    color:#0ff;
-    text-shadow:0 0 8px #0ff;
-}
-.grid{
-  display:flex !important;
-  flex-direction:row !important;
-  justify-content:center;
-  gap:20px;
-  flex-wrap:nowrap !important;
-}
-.poke-card, .map-card{
-  display:inline-block;          
-  vertical-align:top;            
-  width:150px;
-  padding:12px;
-  background:rgba(0,0,0,.6);
-  border:2px solid #0ff;
-  border-radius:15px;
-  cursor:pointer;
-  transition:transform .2s,box-shadow .2s;
-  margin:0 10px;                
+    0 0 20px #0ff,
+    0 0 40px #0ff;
+  animation: flick 1.5s infinite alternate;
+  font-size: 3em;
 }
 
-.poke-card:hover,.map-card:hover{
-  transform:scale(1.08);
-  box-shadow:0 0 15px #f0f;
+@keyframes flick {
+  0%, 18%, 22%, 25%, 53%, 57%, 100% {
+    text-shadow:
+      0 0 4px #fff,
+      0 0 10px #fff,
+      0 0 20px #0ff,
+      0 0 40px #0ff;
+  }
+  20%, 24%, 55% {
+    text-shadow: none;
+  }
+}
+.poke-card {
+  background: #000;   
+  color: white;                    /* pure black */
+  border: 2px solid #0ff;                 /* cyan neon frame */
+  border-radius: 16px;
+  box-shadow: 0 0 8px #0ff, inset 0 0 8px #0ff800;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  width: 160px;
+  height: 200px;                          /* fixed height = clean grid */
+  transition: transform .2s, box-shadow .2s;
 }
 
-.poke-card.selected,.map-card.selected{
-  border-color:#f0f;
-  box-shadow:0 0 20px #f0f;
+/* 2.  hover = lift + stronger glow */
+.poke-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px #0ff, inset 0 0 12px #0ff;
 }
 
-.poke-card img{
-    width:90px;
-    height:90px;
-    image-rendering:pixelated;
+/* 3.  selected = magenta pulse */
+.poke-card.selected {
+  border-color: #f0f;
+  animation: pulse 1.2s infinite alternate;
 }
-.map-card img{
-    width:100%;
-    height:80px;
-    object-fit:cover;
-    border-radius:8px;
+@keyframes pulse {
+  from { box-shadow: 0 0 10px #f0f, inset 0 0 6px #f0f800; }
+  to   { box-shadow: 0 0 25px #f0f, inset 0 0 14px #f0f; }
 }
 
-.footer{
-    margin-top:30px;
-    display:flex;
-    justify-content:center;
-    gap:25px;
+/* 4.  pixel-perfect sprite */
+.poke-card img {
+  width: 90px;
+  height: 90px;
+  image-rendering: crisp-edges;   /* chrome */
+  image-rendering: pixelated;     /* firefox */
+  filter: drop-shadow(0 0 4px #fff);
 }
+
+/* 5.  name + types */
+.poke-card > div:first-of-type {
+  margin-top: 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-shadow: 0 0 6px #0ff;
+}
+
+/* 6.  grid gap & centering */
+#pokeGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+/* ----------  ARENA CARD – same black theme  ---------- */
+.map-card {
+  background: #000;
+  border: 2px solid #0ff;
+  border-radius: 16px;
+  box-shadow: 0 0 8px #0ff, inset 0 0 8px #0ff800;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  width: 160px;
+  height: 160px;               /* square arena card */
+  transition: transform .2s, box-shadow .2s;
+}
+
+.map-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px #0ff, inset 0 0 12px #0ff;
+}
+
+.map-card.selected {
+  border-color: #f0f;
+  animation: pulse 1.2s infinite alternate;
+}
+
+.map-card img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 8px;
+  filter: drop-shadow(0 0 4px #fff);
+}
+
+.map-card > div:last-of-type {
+  margin-top: 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: .5px;
+  text-shadow: 0 0 6px #0ff;
+}
+
+/* keep the existing grid gap & centering you already have */
+#mapGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+  padding: 20px 0;
+}
+
+.choose-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.choose-section-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  width: 100%;
+}
+
+.choose-section {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#pokeGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  justify-items: center;
+  padding: 15px;                     
+  background: rgba(0, 0, 0, 0.25);   
+  backdrop-filter: blur(10px);       
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  #pokeGrid,
+  #mapGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.choose-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  margin-top: 2rem;
+}
+
 .neon-btn{
-  padding:15px 35px;
-  font-size:1.1rem;
-  border:none;
-  border-radius:25px;
-  cursor:pointer;
-  background:#111;
-  color:#fff;
-  border:2px solid;
-  transition:all .2s;
+  display: inline-block;
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background: #111;
+  border: 2px solid;
+  border-radius: 25px;
+  position: relative;
+  transition: .25s;
 }
+
 .neon-btn.start{
-    border-color:#0ff;
-    box-shadow:0 0 10px #0ff,inset 0 0 5px #0ff;
+  border-color: #0ff;
+  box-shadow: 0 0 4px #0ff, inset 0 0 4px #f0f;
 }
-.neon-btn.start:hover{
-    box-shadow:0 0 20px #0ff,inset 0 0 10px #0ff;
-    transform:translateY(-2px);}
+
+.neon-btn.neon-btn.start:hover{
+  background: #0ff;
+  color: #000;
+  box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
+}
+
 .neon-btn.back{
-    border-color:#f0f;box-shadow:0 0 10px #f0f,inset 0 0 5px #f0f;
+  border-color: #f0f;
+  box-shadow: 0 0 4px #f0f inset 0 0 4px #f0f800;
 }
+
 .neon-btn.back:hover{
-    box-shadow:0 0 20px #f0f,inset 0 0 10px #f0f;transform:translateY(-2px);
+  background: #f0f;
+  color: #000;
+  box-shadow: 0 0 20px #f0f, inset 0 0 10px #f0f;
 }
-.neon-btn:disabled{
-    opacity:.4;
-    cursor:not-allowed;
+
+.neon-btn.disabled{
+  opacity: .4;
+  cursor: not-allowed;
+  box-shadow: none;
 }
-.choose-footer{
-    margin-top: 40px;
+/*Pagination*/
+.paginator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 15px;
 }
-#startBtn.disabled{
-  opacity:.4;
-  cursor:not-allowed;
-} */
+.paginator button {
+  padding: 6px 12px;
+  background: rgba(0,0,0,.4);
+  border: 1px solid #0ff;
+  color: #0ff;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: .2s;
+}
+.paginator button:hover:not(:disabled) {
+  background: #0ff;
+  color: #000;
+}
+.paginator button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}

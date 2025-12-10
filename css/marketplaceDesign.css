@@ -7,7 +7,7 @@
  body{
   font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
   color:#fff;
-  background:#0b0b0d url("../images/marketplace.jpg") center/cover;
+  background:#0b0b0d url("../images/menuwp.gif") center/cover;
   min-height:100vh;
 }
 
@@ -163,4 +163,11 @@
   border-radius: 4px;
   cursor: pointer;
 }
-.sell-btn:hover { background: #f44; color: #000; }
+.sell-btn {
+  background: #e74c3c;
+  border: 1px solid #c0392b;
+  color: #fff;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+}

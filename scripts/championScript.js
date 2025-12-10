@@ -50,7 +50,7 @@ const catalog = {
 
 /* ----------  RENDER MY CHAMPIONS  ---------- */
 function renderChampions() {
-  const ids   = JSON.parse(localStorage.getItem('champions'))?.fighters || [];
+  const ids   = JSON.parse(localStorage.getItem('owned'))?.fighters || [];
   const grid  = document.getElementById('grid');
   const none  = document.getElementById('none');
 

@@ -1,39 +1,39 @@
-/* ----------  CURRENCY  ---------- */
-const MTK_ADDRESS = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B'; // MTK contract
+/* ==========================================
+   MARKETPLACE  –  FULL REPLACEMENT
+   ========================================== */
+
+/* ----------  CHAIN  ---------- */
+const MTK_ADDRESS = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B';
 const MTK_ABI = [
   {"inputs":[{"internalType":"uint256","name":"initialSupply","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
   {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
   {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"}
 ];
-
-let gold = Number(localStorage.getItem('mtk') || 0);   // 💎 MTK
-let gems = Number(localStorage.getItem('eth') || 0);   // 💰 ETH
 let account, provider, mtkContract;
 
-function spendMTK(n)  { if (gold >= n)  { gold -= n;  saveAndRefresh(); return true } return false }
-function spendETH(n)  { if (gems >= n)  { gems -= n;  saveAndRefresh(); return true } return false }
-
+/* ----------  ECONOMY  ---------- */
+let gold = Number(localStorage.getItem('mtk') || 0);
+let gems = Number(localStorage.getItem('eth') || 0);
 function saveAndRefresh() {
   localStorage.setItem('mtk', gold);
   localStorage.setItem('eth', gems);
-  document.getElementById('gold').textContent = '💰 ' + gold.toFixed(2);   // MTK
-  document.getElementById('gems').textContent = '💎 ' + gems.toFixed(3);  // ETH
+  document.getElementById('gold').textContent = '💰 ' + gold.toFixed(2);
+  document.getElementById('gems').textContent = '💎 ' + gems.toFixed(3);
+}
+function spendMTK(n) { if (gold >= n) { gold -= n; saveAndRefresh(); return true; } return false; }
+function spendETH(n) { if (gems >= n) { gems -= n; saveAndRefresh(); return true; } return false; }
+
+/* ----------  INVENTORY  ---------- */
+const owned = JSON.parse(localStorage.getItem('owned')) || { fighters: [4, 7, 1, 19], moves: {}, items: {}, skins: [] };
+function pushOwned(id) {
+  if (!owned.fighters.includes(id)) owned.fighters.push(id);
+  localStorage.setItem('owned', JSON.stringify(owned));
+  // keep legacy champions key in sync
+  const champs = JSON.parse(localStorage.getItem('champions') || '[]');
+  if (!champs.includes(id)) { champs.push(id); localStorage.setItem('champions', JSON.stringify(champs)); }
 }
 
-/* ----------  OWNED INVENTORY  ---------- */
-const owned = JSON.parse(localStorage.getItem('owned')) || {
-  fighters: [4, 7, 1, 19],
-  moves: {},
-  items: {},
-  skins: []
-};
-
-/*  SEED champions with starters if empty  */
-if (!localStorage.getItem('champions')) {
-  localStorage.setItem('champions', JSON.stringify([4, 7, 1, 19]));
-}
-
-/* ----------  CATALOG BY TYPE  ---------- */
+/* ----------  CATALOG  ---------- */
 const shopCatalog = {
   Fire: [
     { id: 4, name: 'Charmander', price: 0, currency: 'gold', sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png', desc: 'Starter fire lizard' },
@@ -97,27 +97,97 @@ const shopCatalog = {
   ]
 };
 
-/* ---- render cards ---- */
-function renderTab(tab) {
-  const list = shopCatalog[tab] || [];
-  const grid = document.getElementById('shopContent');
-  grid.innerHTML = list.map(item => `
+/* ----------  ONE-TIME: SAVE FULL ROSTER FOR CHOOSE.JS  ---------- */
+(function saveRosterOnce() {
+  const roster = Object.values(shopCatalog).flat().map(c => ({
+    id: c.id,
+    name: c.name,
+    types: c.types || ['normal'],
+    sprite: c.sprite.trim(),
+    maxMana: 100,
+    mana: 100,
+    armor: 0,
+    moves: c.moves || [
+      { name: 'Tackle', mana: 0, power: 40, cd: 0, desc: 'Basic attack' },
+      { name: 'Water Gun', mana: 20, power: 60, cd: 2, desc: 'Ranged shot' },
+      { name: 'Aqua Tail', mana: 35, power: 80, cd: 4, desc: 'Strong whip' },
+      { name: 'Hydro Vortex', mana: 60, power: 130, cd: 10, desc: 'ULT' }
+    ]
+  }));
+  if (!localStorage.getItem('roster')) localStorage.setItem('roster', JSON.stringify(roster));
+})();
+
+/* ----------  HELPERS  ---------- */
+function getPriceById(id) {
+  for (const list of Object.values(shopCatalog)) {
+    const it = list.find(x => x.id === id);
+    if (it) return it.price;
+  }
+  return 0;
+}
+
+/* ----------  RENDER  ---------- */
+function cardHTML(item, forSale = false) {
+  const ownedAlready = owned.fighters.includes(item.id);
+  return `
     <div class="card">
       <img src="${item.sprite}" onerror="this.src='images/placeholder.png'">
       <div>${item.name}</div>
       <div class="price">${item.price} ${item.currency === 'gold' ? '💰' : '💎'}</div>
-      <button class="buy-btn" data-tab="${tab}" data-id="${item.id}" ${owned.fighters.includes(item.id) ? 'disabled' : ''}>
-        ${owned.fighters.includes(item.id) ? 'Owned' : 'Buy'}
-      </button>
-    </div>
-  `).join('');
+      ${forSale
+        ? `<button class="sell-btn" data-id="${item.id}">Sell (50 % refund)</button>`
+        : `<button class="buy-btn" data-id="${item.id}" ${ownedAlready ? 'disabled' : ''}>
+             ${ownedAlready ? 'Owned' : 'Buy'}
+           </button>`}
+    </div>`;
 }
 
-/* ---- tab switching ---- */
+function renderTab(tab) {
+  const grid = document.getElementById('shopContent');
+  if (tab === 'Owned') {
+    const list = owned.fighters.map(id => {
+      for (const arr of Object.values(shopCatalog)) {
+        const it = arr.find(x => x.id === id);
+        if (it) return it;
+      }
+      return null;
+    }).filter(Boolean);
+    grid.innerHTML = list.length
+      ? list.map(i => cardHTML(i, true)).join('')
+      : `<div style="text-align:center;color:#fff;">
+           <p>You don’t own any champions yet.</p>
+           <button class="neon-btn" onclick="location.href='gamemaster.html'">Go to Game</button>
+         </div>`;
+  } else {
+    grid.innerHTML = shopCatalog[tab].map(i => cardHTML(i, false)).join('');
+  }
+}
+
+/* ----------  BUY / SELL  ---------- */
+document.addEventListener('click', e => {
+  if (e.target.matches('.buy-btn') && !e.target.disabled) {
+    const id = Number(e.target.dataset.id);
+    const item = Object.values(shopCatalog).flat().find(i => i.id === id);
+    if (!item) return;
+    if (!spendMTK(item.price)) return alert('Not enough MTK!');
+    pushOwned(id);
+    renderTab(document.querySelector('.tab.active').dataset.tab);
+  }
+  if (e.target.matches('.sell-btn')) {
+    const id = Number(e.target.dataset.id);
+    const refund = Math.floor(getPriceById(id) * 0.5);
+    if (!confirm(`Sell for ${refund} MTK?`)) return;
+    owned.fighters = owned.fighters.filter(f => f !== id);
+    localStorage.setItem('owned', JSON.stringify(owned));
+    gold += refund; saveAndRefresh();
+    renderTab('Owned');
+  }
+});
+
+/* ----------  TABS  ---------- */
 document.addEventListener('DOMContentLoaded', () => {
   saveAndRefresh();
   renderTab('Fire');
-
   document.querySelectorAll('.tab').forEach(btn =>
     btn.addEventListener('click', e => {
       document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
@@ -125,47 +195,23 @@ document.addEventListener('DOMContentLoaded', () => {
       renderTab(e.target.dataset.tab);
     })
   );
-
-/* ---- buy logic ---- */
-document.addEventListener('click', e => {
-  if (!e.target.matches('.buy-btn')) return;
-  const tab = document.querySelector('.tab.active').dataset.tab;
-  const id = Number(e.target.dataset.id);
-  const item = shopCatalog[tab].find(i => i.id === id);
-  if (!item) return;
-
-  const ok = spendMTK(item.price);
-  if (!ok) return alert('Not enough MTK!');
-
-  owned.fighters.push(item.id);
-  localStorage.setItem('owned', JSON.stringify(owned));
-
-  /*  SEED + STORE champions  */
-  let champs = JSON.parse(localStorage.getItem('champions') || '[]');
-  if (!champs.includes(id)) champs.push(id);
-  localStorage.setItem('champions', JSON.stringify(champs));
-
-  renderTab(tab);
-});
 });
 
-/* ===== WALLET CONNECT + LIVE BALANCES ===== */
+/* ----------  WALLET  ---------- */
 document.querySelector('.currency-bar').insertAdjacentHTML('afterbegin',
   '<button id="connectBtn" style="margin-right:8px;padding:2px 8px;border:1px solid #0ff;background:transparent;color:#0ff;border-radius:4px;cursor:pointer;">Connect</button>');
 
 async function connectWallet() {
   if (!window.ethereum) return alert('MetaMask not found');
-  const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
   handleAccountsChanged(accounts);
 }
 async function handleAccountsChanged(accounts) {
-  if (accounts.length === 0) return;
+  if (!accounts.length) return;
   account = accounts[0];
-  const short = `${account.slice(0, 6)}…${account.slice(-4)}`;
   const btn = document.getElementById('connectBtn');
-  btn.textContent = short;
-  btn.disabled = true;
-  btn.style.cursor = 'default';
+  btn.textContent = `${account.slice(0, 6)}…${account.slice(-4)}`;
+  btn.disabled = true; btn.style.cursor = 'default';
   provider = new ethers.providers.Web3Provider(window.ethereum);
   mtkContract = new ethers.Contract(MTK_ADDRESS, MTK_ABI, provider);
   await fetchOnChainBalances();
@@ -173,15 +219,14 @@ async function handleAccountsChanged(accounts) {
 async function fetchOnChainBalances() {
   const mtkRaw = await mtkContract.balanceOf(account);
   const dec = await mtkContract.decimals();
-  gold = parseFloat(ethers.utils.formatUnits(mtkRaw, dec));   // MTK → gold var
+  gold = parseFloat(ethers.utils.formatUnits(mtkRaw, dec));
   const ethRaw = await provider.getBalance(account);
-  gems = parseFloat(ethers.utils.formatEther(ethRaw));        // ETH → gems var
+  gems = parseFloat(ethers.utils.formatEther(ethRaw));
   saveAndRefresh();
 }
 window.addEventListener('load', async () => {
-  if (window.ethereum) {
-    const accounts = await ethereum.request({ method: 'eth_accounts' });
-    if (accounts[0]) handleAccountsChanged(accounts);
-  }
+  if (!window.ethereum) return;
+  const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+  if (accounts[0]) handleAccountsChanged(accounts);
   document.getElementById('connectBtn').addEventListener('click', connectWallet);
 });
