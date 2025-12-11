@@ -1,6 +1,4 @@
-// battlesystem.js — FULLY FIXED VERSION (copy-paste this)
-
-const fighters = allFighters; // ← from catalog.js (must be loaded first!)
+const fighters = allFighters; 
 
 let playerMon = null;
 let enemyMon = null;
@@ -11,6 +9,8 @@ const maxHp = 5000;
 const maxArmor = 4500;
 
 let pName, pSprite, pTypes, pHpBar, eName, eSprite, eTypes, eHpBar, movePanel;
+
+// Turn system
 let turnTimer = null;
 const TURN_SECS = 5;
 
@@ -30,12 +30,13 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(() => location.href = 'gamemaster.html', 2000);
     return;
   }
-  playerMon = { ...selected, mana: selected.maxMana, currentArmor: selected.armor || 0, _stunTurns: 0 };
-  playerMon.maxMana = playerMon.maxMana || 100; // safety
+
+  playerMon = { ...selected, mana: selected.maxMana || 100, currentArmor: selected.armor || 0, _stunTurns: 0 };
+  playerMon.maxMana = playerMon.maxMana || 100;
 
   const enemyPool = fighters.filter(f => f.id !== fighterId);
   const enemyTpl = enemyPool[Math.floor(Math.random() * enemyPool.length)];
-  enemyMon = { ...enemyTpl, mana: 100, maxMana: 100, currentArmor: enemyTpl.armor || 0, _stunTurns: 0 };
+  enemyMon = { ...enemyTpl, mana: enemyTpl.maxMana || 100, maxMana: enemyTpl.maxMana || 100, currentArmor: enemyTpl.armor || 0, _stunTurns: 0 };
 
   pName = document.getElementById('pName');
   pSprite = document.getElementById('pSprite');
@@ -49,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   movePanel = document.getElementById('movePanel');
 
-  // 6. Initialize everything
   init();
   renderMoveButtons();
   startTurnTimer();
@@ -99,17 +99,18 @@ function addLog(text, isEnemy = false) {
   box.scrollTop = box.scrollHeight;
 }
 
-// ---------- ATTACK ----------
+// ---------- ATTACK (NOW WITH TRUE DAMAGE, STUN & LIFESTEAL) ----------
 function attack(move, isPlayer) {
-  let dmg = move.power;
+  let dmg = move.power || 0;
 
+  const attacker = isPlayer ? playerMon : enemyMon;
   const target = isPlayer ? enemyMon : playerMon;
+
   let armor = target.currentArmor || 0;
 
+  // 1. True Damage – completely ignores armor
   if (move.trueDmg) {
-    const shred = Math.floor(dmg * 0.5);
-    target.currentArmor = Math.max(0, armor - shred);
-    addLog(`${target.name}'s armor shredded ${shred} (true damage)!`, !isPlayer);
+    addLog(`${attacker.name} used ${move.name} – true damage ignores armor!`, isPlayer);
   } else if (armor > 0) {
     const absorbed = Math.min(armor, dmg);
     target.currentArmor -= absorbed;
@@ -117,20 +118,49 @@ function attack(move, isPlayer) {
     addLog(`${target.name}'s armor absorbed ${absorbed}!`, !isPlayer);
   }
 
+  // 2. Apply damage to HP
   if (isPlayer) {
     eHp = Math.max(0, eHp - dmg);
-    addLog(`${playerMon.name} used ${move.name} → ${dmg} damage!`, false);
   } else {
     pHp = Math.max(0, pHp - dmg);
-    addLog(`${enemyMon.name} used ${move.name} → ${dmg} damage!`, true);
   }
+
+  addLog(`${attacker.name} used ${move.name} → ${dmg} damage!`, isPlayer);
+
+  // 3. Lifesteal – heal attacker by % of damage dealt
+  if (move.lifesteal) {
+    const heal = Math.floor(dmg * move.lifesteal);
+    if (isPlayer) {
+      pHp = Math.min(maxHp, pHp + heal);
+    } else {
+      eHp = Math.min(maxHp, eHp + heal);
+    }
+    addLog(`${attacker.name} lifesteals ${heal} HP!`, isPlayer);
+  }
+
+  // 4. Stun – opponent loses next turn(s)
+  if (move.stunTurns) {
+    target._stunTurns = move.stunTurns;
+    addLog(`${target.name} is stunned for ${move.stunTurns} turn(s)!`, !isPlayer);
+  }
+
+  if (move.heal) {
+  const healAmount = move.heal; // e.g. 500 or 1000 HP
+  if (isPlayer) {
+    pHp = Math.min(maxHp, pHp + healAmount);
+  } else {
+    eHp = Math.min(maxHp, eHp + healAmount);
+  }
+  addLog(`${attacker.name} heals for ${healAmount} HP!`, isPlayer);
+}
 
   renderArmor();
   updateBars();
 
   if (checkFaint()) return;
 
-  playerMon.mana -= move.mana;
+  // Mana cost
+  attacker.mana -= move.mana || 0;
   renderMana();
   if (!isPlayer) renderEnemyMana();
 }
@@ -143,7 +173,7 @@ function renderMoveButtons() {
     btn.className = move.mana >= 60 ? 'move-btn ult' : 'move-btn';
     btn.textContent = move.name;
     btn.dataset.move = move.name;
-    btn.title = `${move.desc} (${move.mana} MP • ${move.cd}s CD)`;
+    btn.title = `${move.desc} (${move.mana} MP • ${move.cd || 0}s CD)`;
 
     btn.onclick = () => {
       if (playerMon._stunTurns > 0) {
@@ -166,6 +196,7 @@ function renderMoveButtons() {
   });
 }
 
+// ---------- COOLDOWN ----------
 function startCooldown(btn, secs) {
   if (secs <= 0) return;
   const original = btn.textContent;
@@ -234,10 +265,8 @@ function clearTurnTimer() {
 function freezeMoves() {
   movePanel.querySelectorAll('button').forEach(b => b.disabled = true);
 }
-
 function thawMoves() {
   movePanel.querySelectorAll('button').forEach(b => {
-    // If button is showing cooldown (e.g. "3s"), leave it disabled
     if (!b.textContent.endsWith('s') || !/\d/.test(b.textContent)) {
       b.disabled = false;
     }
@@ -254,7 +283,7 @@ function showEndBanner(msg) {
   freezeMoves();
   const banner = document.createElement('div');
   banner.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-size:3rem;z-index:9999;';
-  banner.innerHTML = `<h1>${msg}</h1><button class="neon-btn" style="margin-top:2rem;padding:1rem 2rem;font-size:1.5rem;" onclick="location.href='choose.html'">Back to Choose</button>`;
+  banner.innerHTML = `<h1>${msg}</h1><button class="neon-btn" style="margin-top:2rem;padding:1rem 2rem;font-size:1.5rem;" onclick="location.href='gamemaster.html'">Back to Choose</button>`;
   document.body.appendChild(banner);
 }
 
@@ -264,13 +293,13 @@ setInterval(() => {
     playerMon.mana = Math.min(playerMon.maxMana, playerMon.mana + 3);
     renderMana();
   }
-  if (enemyMon && enemyMon.mana < 100) {
-    enemyMon.mana = Math.min(100, enemyMon.mana + 3);
+  if (enemyMon && enemyMon.mana < enemyMon.maxMana) {
+    enemyMon.mana = Math.min(enemyMon.maxMana, enemyMon.mana + 3);
     renderEnemyMana();
   }
 }, 1000);
 
-// Run away button
+// Run away
 document.getElementById('runBtn')?.addEventListener('click', () => {
   if (confirm('Run away?')) location.href = 'gamemaster.html';
 });
