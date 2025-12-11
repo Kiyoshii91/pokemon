@@ -24,19 +24,6 @@ body {
     align-items: center;
 }
 
-.menu-background {
-    /* position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,0.1) 0%, transparent 120%),
-        radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 100%),
-        linear-gradient(135deg, #667eea 0%, #000 100%);
-    animation: backgroundShift 2s ease-in-out infinite; */
-}
-
 @keyframes backgroundShift {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.8; }

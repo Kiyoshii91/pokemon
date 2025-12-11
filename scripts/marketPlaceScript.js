@@ -1,38 +1,3 @@
-/* ==========================================
-   MARKETPLACE  –  FULL REPLACEMENT
-   ========================================== */
-
-/* ----------  CHAIN  ---------- */
-const MTK_ADDRESS = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B';
-const MTK_ABI = [
-  {"inputs":[{"internalType":"uint256","name":"initialSupply","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
-  {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
-  {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"}
-];
-let account, provider, mtkContract;
-
-/* ----------  ECONOMY  ---------- */
-let gold = Number(localStorage.getItem('mtk') || 0);
-let gems = Number(localStorage.getItem('eth') || 0);
-function saveAndRefresh() {
-  localStorage.setItem('mtk', gold);
-  localStorage.setItem('eth', gems);
-  document.getElementById('gold').textContent = '💰 ' + gold.toFixed(2);
-  document.getElementById('gems').textContent = '💎 ' + gems.toFixed(3);
-}
-function spendMTK(n) { if (gold >= n) { gold -= n; saveAndRefresh(); return true; } return false; }
-function spendETH(n) { if (gems >= n) { gems -= n; saveAndRefresh(); return true; } return false; }
-
-/* ----------  INVENTORY  ---------- */
-const owned = JSON.parse(localStorage.getItem('owned')) || { fighters: [4, 7, 1, 19], moves: {}, items: {}, skins: [] };
-function pushOwned(id) {
-  if (!owned.fighters.includes(id)) owned.fighters.push(id);
-  localStorage.setItem('owned', JSON.stringify(owned));
-  // keep legacy champions key in sync
-  const champs = JSON.parse(localStorage.getItem('champions') || '[]');
-  if (!champs.includes(id)) { champs.push(id); localStorage.setItem('champions', JSON.stringify(champs)); }
-}
-
 /* ----------  CATALOG  ---------- */
 const shopCatalog = {
   Fire: [
@@ -96,46 +61,63 @@ const shopCatalog = {
     { id: 247, name: 'Pupitar', price: 4000, currency: 'gold', sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/247.png', desc: 'Cocoon cannon' }
   ]
 };
+const MTK_ADDRESS = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B';
+const TREASURY_WALLET = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B'; // ← CHANGE THIS TO YOUR WALLET!
 
-/* ----------  ONE-TIME: SAVE FULL ROSTER FOR CHOOSE.JS  ---------- */
-(function saveRosterOnce() {
-  const roster = Object.values(shopCatalog).flat().map(c => ({
-    id: c.id,
-    name: c.name,
-    types: c.types || ['normal'],
-    sprite: c.sprite.trim(),
-    maxMana: 100,
-    mana: 100,
-    armor: 0,
-    moves: c.moves || [
-      { name: 'Tackle', mana: 0, power: 40, cd: 0, desc: 'Basic attack' },
-      { name: 'Water Gun', mana: 20, power: 60, cd: 2, desc: 'Ranged shot' },
-      { name: 'Aqua Tail', mana: 35, power: 80, cd: 4, desc: 'Strong whip' },
-      { name: 'Hydro Vortex', mana: 60, power: 130, cd: 10, desc: 'ULT' }
-    ]
-  }));
-  if (!localStorage.getItem('roster')) localStorage.setItem('roster', JSON.stringify(roster));
-})();
+const MTK_ABI = [
+  {"inputs":[{"internalType":"uint256","name":"initialSupply","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
+  {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
+  {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
+  {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}
+];
 
-/* ----------  HELPERS  ---------- */
-function getPriceById(id) {
-  for (const list of Object.values(shopCatalog)) {
-    const it = list.find(x => x.id === id);
-    if (it) return it.price;
+let account, provider, mtkContract;
+
+/* ----------  ECONOMY — 100% ON-CHAIN (REAL MTK) ---------- */
+let gold = 0;
+let gems = 0;
+
+async function refreshBalances() {
+  if (!account || !provider || !mtkContract) {
+    document.getElementById('gold').textContent = 'MTK Connect Wallet';
+    document.getElementById('gems').textContent = 'ETH Connect Wallet';
+    return;
   }
-  return 0;
+
+  try {
+    const mtkRaw = await mtkContract.balanceOf(account);
+    const dec = await mtkContract.decimals();
+    gold = Number(ethers.utils.formatUnits(mtkRaw, dec)); // Your real MTK (e.g. 1000000)
+
+    const ethRaw = await provider.getBalance(account);
+    gems = Number(ethers.utils.formatEther(ethRaw));
+
+    document.getElementById('gold').textContent = `MTK ${gold.toLocaleString()}`;
+    document.getElementById('gems').textContent = `ETH ${gems.toFixed(6)}`;
+  } catch (err) {
+    console.error("Balance error:", err);
+    document.getElementById('gold').textContent = 'MTK Error';
+  }
 }
 
-/* ----------  RENDER  ---------- */
+/* ----------  INVENTORY ---------- */
+const owned = JSON.parse(localStorage.getItem('owned')) || { fighters: [4, 7, 1, 19], moves: {}, items: {}, skins: [] };
+function pushOwned(id) {
+  if (!owned.fighters.includes(id)) owned.fighters.push(id);
+  localStorage.setItem('owned', JSON.stringify(owned));
+  const champs = JSON.parse(localStorage.getItem('champions') || '[]');
+  if (!champs.includes(id)) { champs.push(id); localStorage.setItem('champions', JSON.stringify(champs)); }
+}
+
 function cardHTML(item, forSale = false) {
   const ownedAlready = owned.fighters.includes(item.id);
   return `
     <div class="card">
       <img src="${item.sprite}" onerror="this.src='images/placeholder.png'">
       <div>${item.name}</div>
-      <div class="price">${item.price} ${item.currency === 'gold' ? '💰' : '💎'}</div>
+      <div class="price">${item.price} MTK</div>
       ${forSale
-        ? `<button class="sell-btn" data-id="${item.id}">Sell (50 % refund)</button>`
+        ? `<button class="sell-btn" data-id="${item.id}">Sell (50% refund)</button>`
         : `<button class="buy-btn" data-id="${item.id}" ${ownedAlready ? 'disabled' : ''}>
              ${ownedAlready ? 'Owned' : 'Buy'}
            </button>`}
@@ -144,6 +126,8 @@ function cardHTML(item, forSale = false) {
 
 function renderTab(tab) {
   const grid = document.getElementById('shopContent');
+  if (!grid) return;
+
   if (tab === 'Owned') {
     const list = owned.fighters.map(id => {
       for (const arr of Object.values(shopCatalog)) {
@@ -152,81 +136,129 @@ function renderTab(tab) {
       }
       return null;
     }).filter(Boolean);
+
     grid.innerHTML = list.length
       ? list.map(i => cardHTML(i, true)).join('')
-      : `<div style="text-align:center;color:#fff;">
+      : `<div style="text-align:center;color:#fff;padding:3rem;">
            <p>You don’t own any champions yet.</p>
            <button class="neon-btn" onclick="location.href='gamemaster.html'">Go to Game</button>
          </div>`;
   } else {
-    grid.innerHTML = shopCatalog[tab].map(i => cardHTML(i, false)).join('');
+    grid.innerHTML = (shopCatalog[tab] || []).map(i => cardHTML(i, false)).join('');
   }
 }
 
-/* ----------  BUY / SELL  ---------- */
-document.addEventListener('click', e => {
+/* ----------  BUY / SELL — REAL MTK DEDUCTION ---------- */
+document.addEventListener('click', async e => {
   if (e.target.matches('.buy-btn') && !e.target.disabled) {
-    const id = Number(e.target.dataset.id);
-    const item = Object.values(shopCatalog).flat().find(i => i.id === id);
-    if (!item) return;
-    if (!spendMTK(item.price)) return alert('Not enough MTK!');
+  const id = Number(e.target.dataset.id);
+  const item = Object.values(shopCatalog).flat().find(i => i.id === id);
+  if (!item) return;
+
+  if (!account) return alert('Connect wallet first!');
+
+  const price = item.price;
+  if (price === 0) {
     pushOwned(id);
-    renderTab(document.querySelector('.tab.active').dataset.tab);
+    renderTab(document.querySelector('.tab.active')?.dataset.tab || 'Fire');
+    return;
   }
+
+  if (!confirm(`Buy ${item.name} for ${price} MTK?\nThis will spend REAL tokens!`)) return;
+
+  try {
+    e.target.disabled = true;
+    e.target.textContent = 'Sending...';
+
+    const signer = provider.getSigner();
+    const mtkWithSigner = new ethers.Contract(MTK_ADDRESS, MTK_ABI, signer);
+
+    // Fetch decimals once here (safe and reliable)
+    const decimals = await mtkContract.decimals(); // 18 for most tokens
+
+    // Convert human-readable price (1800) → full token amount (1800 * 10^18)
+    const amountToSend = ethers.utils.parseUnits(price.toString(), decimals);
+
+    const tx = await mtkWithSigner.transfer(TREASURY_WALLET, amountToSend);
+    e.target.textContent = 'Confirming...';
+    await tx.wait();
+
+    await refreshBalances();  // updates your displayed MTK balance
+    pushOwned(id);
+    alert(`${item.name} purchased! ${price} MTK sent!`);
+    renderTab(document.querySelector('.tab.active')?.dataset.tab || 'Fire');
+
+  } catch (err) {
+    console.error(err);
+    alert('Transaction failed: ' + (err.reason || err.message || 'Rejected'));
+  } finally {
+    e.target.disabled = false;
+    e.target.textContent = 'Buy';
+  }
+}
+
   if (e.target.matches('.sell-btn')) {
     const id = Number(e.target.dataset.id);
     const refund = Math.floor(getPriceById(id) * 0.5);
-    if (!confirm(`Sell for ${refund} MTK?`)) return;
-    owned.fighters = owned.fighters.filter(f => f !== id);
-    localStorage.setItem('owned', JSON.stringify(owned));
-    gold += refund; saveAndRefresh();
-    renderTab('Owned');
+    if (confirm(`Sell for ${refund} MTK?`)) {
+      owned.fighters = owned.fighters.filter(f => f !== id);
+      localStorage.setItem('owned', JSON.stringify(owned));
+      gold += refund;
+      refreshBalances();
+      renderTab('Owned');
+    }
   }
 });
 
-/* ----------  TABS  ---------- */
+/* ----------  TABS & INIT ---------- */
 document.addEventListener('DOMContentLoaded', () => {
-  saveAndRefresh();
+  refreshBalances();
   renderTab('Fire');
-  document.querySelectorAll('.tab').forEach(btn =>
+
+  document.querySelectorAll('.tab').forEach(btn => {
     btn.addEventListener('click', e => {
       document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
       e.target.classList.add('active');
       renderTab(e.target.dataset.tab);
-    })
-  );
+    });
+  });
+
+  // Auto-set Fire tab as active
+  document.querySelector('.tab[data-tab="Fire"]')?.classList.add('active');
 });
 
-/* ----------  WALLET  ---------- */
+/* ----------  WALLET CONNECT ---------- */
 document.querySelector('.currency-bar').insertAdjacentHTML('afterbegin',
-  '<button id="connectBtn" style="margin-right:8px;padding:2px 8px;border:1px solid #0ff;background:transparent;color:#0ff;border-radius:4px;cursor:pointer;">Connect</button>');
+  '<button id="connectBtn" style="margin-right:12px;padding:6px 12px;background:#000;color:#0ff;border:1px solid #0ff;border-radius:6px;font-size:0.9em;cursor:pointer;">Connect Wallet</button>');
 
 async function connectWallet() {
-  if (!window.ethereum) return alert('MetaMask not found');
-  const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-  handleAccountsChanged(accounts);
+  if (!window.ethereum) return alert('MetaMask not found!');
+  try {
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+  } catch (err) {
+    alert('Connection rejected');
+  }
 }
+
 async function handleAccountsChanged(accounts) {
-  if (!accounts.length) return;
+  if (!accounts.length) {
+    account = null;
+    refreshBalances();
+    return;
+  }
   account = accounts[0];
-  const btn = document.getElementById('connectBtn');
-  btn.textContent = `${account.slice(0, 6)}…${account.slice(-4)}`;
-  btn.disabled = true; btn.style.cursor = 'default';
+  document.getElementById('connectBtn').textContent = `${account.slice(0,6)}...${account.slice(-4)}`;
+  document.getElementById('connectBtn').disabled = true;
+
   provider = new ethers.providers.Web3Provider(window.ethereum);
   mtkContract = new ethers.Contract(MTK_ADDRESS, MTK_ABI, provider);
-  await fetchOnChainBalances();
+  await refreshBalances();
 }
-async function fetchOnChainBalances() {
-  const mtkRaw = await mtkContract.balanceOf(account);
-  const dec = await mtkContract.decimals();
-  gold = parseFloat(ethers.utils.formatUnits(mtkRaw, dec));
-  const ethRaw = await provider.getBalance(account);
-  gems = parseFloat(ethers.utils.formatEther(ethRaw));
-  saveAndRefresh();
-}
-window.addEventListener('load', async () => {
-  if (!window.ethereum) return;
-  const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-  if (accounts[0]) handleAccountsChanged(accounts);
-  document.getElementById('connectBtn').addEventListener('click', connectWallet);
-});
+
+window.addEventListener('load', () => {
+  if (window.ethereum) {
+    window.ethereum.request({ method: 'eth_accounts' }).then(handleAccountsChanged);
+    window.ethereum.on('accountsChanged', handleAccountsChanged);
+    document.getElementById('connectBtn').addEventListener('click', connectWallet);
+  }
+})
