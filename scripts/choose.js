@@ -24,7 +24,6 @@ if (ownedFighters.length === 0) {
   });
 }
 
-// Use ONLY owned fighters from now on
 const fighters = ownedFighters;
 const arenas = [{ id: 'Arena', name: 'Colosseum', thumb: 'images/arena.png' }];
 

@@ -229,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 /* ----------  WALLET CONNECT ---------- */
 document.querySelector('.currency-bar').insertAdjacentHTML('afterbegin',
-  '<button id="connectBtn" style="margin-right:12px;padding:6px 12px;background:#000;color:#0ff;border:1px solid #0ff;border-radius:6px;font-size:0.9em;cursor:pointer;">Connect Wallet</button>');
+  '<button id="connectBtn" style="margin-right:12px;padding:6px 12px;background:#000;color:whitesmoke;border:1px solid whitesmoke;border-radius:6px;font-size:0.9em;cursor:pointer;">Connect Wallet</button>');
 
 async function connectWallet() {
   if (!window.ethereum) return alert('MetaMask not found!');

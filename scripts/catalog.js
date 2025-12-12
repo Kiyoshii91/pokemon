@@ -272,7 +272,7 @@ const shopCatalog = {
       { name: 'Aqua Tail', mana: 40, power: 450, cd: 6, desc: 'Water tail' },
       { name: 'Hydro Pump', mana: 150, power: 1400, cd: 24, desc: 'ULT: massive water' }
     ]},
-    { id: 6, name: 'Mega-Charizard X', types: ['fire','dragon'], sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png', maxMana: 500, mana: 500, armor: 300, moves: [
+    { id: 6, name: 'Mega-Charizard', types: ['fire','dragon'], sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png', maxMana: 500, mana: 500, armor: 300, moves: [
       { name: 'Dragon Claw', mana: 0, power: 280, cd: 0, desc: 'Dragon claw' },
       { name: 'Flare Blitz', mana: 80, power: 160, cd: 8, desc: 'Reckless fire' },
       { name: 'Dragon Rush', mana: 95, power: 300, cd: 7, desc: 'Dragon charge' },

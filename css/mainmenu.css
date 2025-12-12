@@ -44,11 +44,23 @@ body {
 }
 
 .game-title {
+    font-family: 'Venito';
     font-size: 2.8em;
-    color: #fff;
-    margin-bottom: 15px;
+    color: rgba(214, 85, 11, 0.768);
+    margin-bottom: 12px;
     text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
-    /* animation: titlePulse 2s ease-in-out infinite; */
+    letter-spacing: 2px;
+    animation: flicker 2.5s infinite;
+
+}
+/* flickering-lights.css */
+/* white-and-brown flicker */
+@keyframes flicker {
+  0%, 100% { opacity: 1; text-shadow: 0 0 4px #fff, 0 0 8px #fff, 3px 3px 6px rgba(107,62,26,.35); }
+  45%      { opacity: 1; text-shadow: 0 0 6px #fff, 0 0 12px #fff, 3px 3px 6px rgba(107,62,26,.35); }
+  50%      { opacity: .85; text-shadow: 0 0 2px #fff, 0 0 4px #fff, 3px 3px 6px rgba(107,62,26,.35); }
+  55%      { opacity: 1; text-shadow: 0 0 5px #fff, 0 0 10px #fff, 3px 3px 6px rgba(107,62,26,.35); }
+  75%      { opacity: .9; text-shadow: 0 0 3px #fff, 0 0 6px #fff, 3px 3px 6px rgba(107,62,26,.35); }
 }
 
 @keyframes titlePulse {
@@ -111,21 +123,21 @@ body {
 }
 
 .battle-btn { 
-    border-color: #ff00ff; 
-    color: #ff00ff; 
+    border-color: rgba(107,62,26,.35); 
+    color: rgb(200, 189, 178); 
 } /* magenta */
 .market-btn { 
-    border-color: #00ffff; 
-    color: #00ffff; 
+    border-color: rgba(107,62,26,.35); 
+    color: rgb(200, 189, 178);  
 } /* cyan */
 .settings-btn { 
     border-color: #39ff14; 
     color: #39ff14; 
 } /* lime */
 .exit-btn { 
-    border-color: #faff00; 
-    color: #faff00; }
-
+    border-color: rgba(107,62,26,.35); 
+    color: rgb(200, 189, 178); 
+}
 .sub-menu {
     margin-top: 20px;
     padding: 20px;

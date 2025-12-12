@@ -1,21 +1,17 @@
-/* ==========================================
-   BLACK-CARD THEME  –  link AFTER choose.css
-   ========================================== */
 
-/* 1.  black card base */
 body{
-  background-image: url('../images/choosewallpaper.gif');
+  background-image: url('../images/choosewallpaper2.gif');
   background-size: cover;
   background-repeat: no-repeat;
 }
 .neon-h {
   text-align: center;
-  color: #fff;
+  color: rgba(107,62,26,.35);
   text-shadow:
     0 0 4px #fff,
     0 0 10px #fff,
-    0 0 20px #0ff,
-    0 0 40px #0ff;
+    0 0 20px rgba(107,62,26,.35),
+    0 0 40px rgba(107,62,26,.35);
   animation: flick 1.5s infinite alternate;
   font-size: 3em;
 }
@@ -25,19 +21,21 @@ body{
     text-shadow:
       0 0 4px #fff,
       0 0 10px #fff,
-      0 0 20px #0ff,
-      0 0 40px #0ff;
+      0 0 20px rgba(107,62,26,.35),
+      0 0 40px rgba(107,62,26,.35);
   }
   20%, 24%, 55% {
     text-shadow: none;
   }
 }
 .poke-card {
-  background: #000;   
+  font-family: 'Hunter';
+  letter-spacing: 0px;
+  background:#000;
   color: white;                    /* pure black */
-  border: 2px solid #0ff;                 /* cyan neon frame */
+  border: 2px solid rgba(107,62,26,.35);                 /* cyan neon frame */
   border-radius: 16px;
-  box-shadow: 0 0 8px #0ff, inset 0 0 8px #0ff800;
+  box-shadow: 0 0 8px rgba(107,62,26,.35), inset 0 0 8px whitesmoke; 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -51,23 +49,24 @@ body{
 /* 2.  hover = lift + stronger glow */
 .poke-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 20px #0ff, inset 0 0 12px #0ff;
+  box-shadow: 0 0 20px red, inset 0 0 12px whitesmoke;
 }
 
 /* 3.  selected = magenta pulse */
 .poke-card.selected {
-  border-color: #f0f;
+  border-color: whitesmoke;
   animation: pulse 1.2s infinite alternate;
 }
 @keyframes pulse {
-  from { box-shadow: 0 0 10px #f0f, inset 0 0 6px #f0f800; }
-  to   { box-shadow: 0 0 25px #f0f, inset 0 0 14px #f0f; }
+  from { box-shadow: 0 0 10px red, inset 0 0 6px red; }
+  to   { box-shadow: 0 0 25px rgba(107,62,26,.35), inset 0 0 14px rgba(107,62,26,.35); }
 }
 
 /* 4.  pixel-perfect sprite */
 .poke-card img {
-  width: 90px;
-  height: 90px;
+  margin-top: 25px;
+  width: 100px;
+  height: 100px;
   image-rendering: crisp-edges;   /* chrome */
   image-rendering: pixelated;     /* firefox */
   filter: drop-shadow(0 0 4px #fff);
@@ -75,7 +74,7 @@ body{
 
 /* 5.  name + types */
 .poke-card > div:first-of-type {
-  margin-top: 6px;
+  margin-top: 25px;
   font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: .5px;
@@ -94,9 +93,9 @@ body{
 /* ----------  ARENA CARD – same black theme  ---------- */
 .map-card {
   background: #000;
-  border: 2px solid #0ff;
+  border: 2px solid rgba(107,62,26,.35);
   border-radius: 16px;
-  box-shadow: 0 0 8px #0ff, inset 0 0 8px #0ff800;
+  box-shadow: 0 0 8px whitesmoke, inset 0 0 8px whitesmoke;
   display: flex;
   flex-direction: column;
   color: white;
@@ -110,11 +109,11 @@ body{
 
 .map-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 0 20px #0ff, inset 0 0 12px #0ff;
+  box-shadow: 0 0 20px red, inset 0 0 12px whitesmoke;
 }
 
 .map-card.selected {
-  border-color: #f0f;
+  border-color: rgba(107,62,26,.35);
   animation: pulse 1.2s infinite alternate;
 }
 
@@ -123,7 +122,7 @@ body{
   height: 90px;
   object-fit: cover;
   border-radius: 8px;
-  filter: drop-shadow(0 0 4px #fff);
+  filter: drop-shadow(0 0 4px white);
 }
 
 .map-card > div:last-of-type {
@@ -214,25 +213,25 @@ body{
 }
 
 .neon-btn.start{
-  border-color: #0ff;
+  border-color: rgba(107,62,26,.35);
   box-shadow: 0 0 4px #0ff, inset 0 0 4px #f0f;
 }
 
 .neon-btn.neon-btn.start:hover{
-  background: #0ff;
-  color: #000;
-  box-shadow: 0 0 20px #0ff, inset 0 0 10px #0ff;
+  background: rgba(25, 85, 167, 0.795);
+  color: whitesmoke;
+  box-shadow: 0 0 20px whitesmoke, inset 0 0 10px whitesmoke;
 }
 
 .neon-btn.back{
-  border-color: #f0f;
+  border-color: rgba(107,62,26,.35);
   box-shadow: 0 0 4px #f0f inset 0 0 4px #f0f800;
 }
 
 .neon-btn.back:hover{
-  background: #f0f;
-  color: #000;
-  box-shadow: 0 0 20px #f0f, inset 0 0 10px #f0f;
+  background: rgba(224, 7, 7, 0.803);
+  color: whitesmoke;
+  box-shadow: 0 0 20px rgba(107,62,26,.35), inset 0 0 10px rgba(107,62,26,.35);
 }
 
 .neon-btn.disabled{
@@ -251,14 +250,14 @@ body{
 .paginator button {
   padding: 6px 12px;
   background: rgba(0,0,0,.4);
-  border: 1px solid #0ff;
-  color: #0ff;
+  border: 1px solid rgba(107,62,26,.35);
+  color: whitesmoke;
   border-radius: 6px;
   cursor: pointer;
   transition: .2s;
 }
 .paginator button:hover:not(:disabled) {
-  background: #0ff;
+  background: rgba(107,62,26,.35);
   color: #000;
 }
 .paginator button:disabled {
