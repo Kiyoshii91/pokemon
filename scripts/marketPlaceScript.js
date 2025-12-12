@@ -1,4 +1,3 @@
-/* ----------  CATALOG  ---------- */
 const shopCatalog = {
   Fire: [
     { id: 4, name: 'Charmander', price: 0, currency: 'gold', sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png', desc: 'Starter fire lizard' },
@@ -61,21 +60,60 @@ const shopCatalog = {
     { id: 247, name: 'Pupitar', price: 4000, currency: 'gold', sprite: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/247.png', desc: 'Cocoon cannon' }
   ]
 };
+const SHOP_ADDRESS = "0x6Ba884d413b52B2E38af2181676c174aD702FC33"; 
+const SHOP_ABI = ["function sellPokemon(uint256 pokemonId) external"];
 const MTK_ADDRESS = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B';
-const TREASURY_WALLET = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B'; // ← CHANGE THIS TO YOUR WALLET!
+const TREASURY_WALLET = '0xbd6852f0ef500984F4dAdBD58397B9199950BD5B'; 
 
 const MTK_ABI = [
   {"inputs":[{"internalType":"uint256","name":"initialSupply","type":"uint256"}],"stateMutability":"nonpayable","type":"constructor"},
   {"inputs":[{"internalType":"address","name":"account","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},
   {"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"stateMutability":"view","type":"function"},
-  {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}
+  {"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"},
+  {"inputs":[{"internalType":"address","name":"from","type":"address"},{"internalType":"address","name":"to","type":"uint256"},{"internalType":"uint256","name":"amount","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"stateMutability":"nonpayable","type":"function"}
 ];
+
+/* ----------  QUICK DIAGNOSTIC  ---------- */
+async function logAllowanceAndBalance() {
+  if (!provider) return;   // wallet not connected yet
+  try {
+    const mtk = new ethers.Contract(
+      MTK_ADDRESS,
+      ['function allowance(address,address) view returns (uint)',
+       'function balanceOf(address) view returns (uint)'],
+      provider
+    );
+    const allowed = await mtk.allowance(TREASURY_WALLET, SHOP_ADDRESS);
+    const balance   = await mtk.balanceOf(TREASURY_WALLET);
+    console.log(
+      '%cTreasury → Shop  allowance: ' + ethers.utils.formatEther(allowed) + ' MTK',
+      'color: #0f0'
+    );
+    console.log(
+      '%cTreasury MTK balance:       ' + ethers.utils.formatEther(balance) + ' MTK',
+      'color: #0af'
+    );
+  } catch (e) {
+    console.warn('Diagnostic error', e);
+  }
+}
+
+/*  call after wallet is connected  */
+window.addEventListener('load', () => {
+  if (window.ethereum)
+    window.ethereum.on('accountsChanged', () => setTimeout(logAllowanceAndBalance, 500));
+});
 
 let account, provider, mtkContract;
 
-/* ----------  ECONOMY — 100% ON-CHAIN (REAL MTK) ---------- */
 let gold = 0;
 let gems = 0;
+
+function getItemById(id) {
+  for (const arr of Object.values(shopCatalog))
+    if (arr.find(i => i.id === id)) return arr.find(i => i.id === id);
+  return null;
+}
 
 async function refreshBalances() {
   if (!account || !provider || !mtkContract) {
@@ -197,17 +235,43 @@ document.addEventListener('click', async e => {
   }
 }
 
-  if (e.target.matches('.sell-btn')) {
-    const id = Number(e.target.dataset.id);
-    const refund = Math.floor(getPriceById(id) * 0.5);
-    if (confirm(`Sell for ${refund} MTK?`)) {
-      owned.fighters = owned.fighters.filter(f => f !== id);
-      localStorage.setItem('owned', JSON.stringify(owned));
-      gold += refund;
-      refreshBalances();
-      renderTab('Owned');
-    }
+/* ---------- SELL — now uses the Shop contract ---------- */
+if (e.target.matches('.sell-btn')) {
+  const id   = Number(e.target.dataset.id);
+  const item = getItemById(id);
+  if (!item) return;
+
+  const refund = Math.floor(item.price * 0.5);
+  if (!refund) return alert('This starter cannot be sold.');
+
+  if (!confirm(`Sell ${item.name} for ${refund} MTK?`)) return;
+
+  try {
+    e.target.disabled = true;
+    e.target.textContent = 'Selling...';
+
+    const signer = provider.getSigner();
+    const shopContract = new ethers.Contract(SHOP_ADDRESS, SHOP_ABI, signer);
+
+    const tx = await shopContract.sellPokemon(id);
+    await tx.wait();
+
+    // Remove from inventory
+    owned.fighters = owned.fighters.filter(f => f !== id);
+    localStorage.setItem('owned', JSON.stringify(owned));
+
+    await refreshBalances();
+    renderTab('Owned');
+
+    alert(`${item.name} sold! ${refund} MTK received in your wallet.`);
+  } catch (err) {
+    console.error(err);
+    alert('Sell failed: ' + (err.reason || err.message || 'Rejected'));
+  } finally {
+    e.target.disabled = false;
+    e.target.textContent = 'Sell (50% refund)';
   }
+}
 });
 
 /* ----------  TABS & INIT ---------- */

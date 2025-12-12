@@ -77,8 +77,8 @@ body{
   margin-top: 25px;
   font-size: 1.05rem;
   font-weight: 600;
-  letter-spacing: .5px;
-  text-shadow: 0 0 6px #0ff;
+  letter-spacing: .8px;
+  text-shadow: 0 0 6px whitesmoke;
 }
 
 /* 6.  grid gap & centering */
